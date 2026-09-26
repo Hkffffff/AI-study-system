@@ -1,0 +1,26 @@
+# IDE
+.idea/
+*.iml
+
+# Java
+target/
+*.class
+
+# Node
+node_modules/
+dist/
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Storage
+storage/*
+!storage/.gitkeep
