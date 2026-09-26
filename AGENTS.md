@@ -6,7 +6,7 @@ This project is a personal AI-powered learning management system.
 
 It is a single-user application for the owner's personal use. There is no registration or login in the MVP.
 
-Detailed product and architecture design lives in `docs/` (start with `docs/README.md`). Keep it in sync with this file.
+Detailed product and architecture design lives in `docs/` (index: `docs/README.md`; progress: `docs/progress.md`; decisions: `docs/decisions.md`). Keep it in sync with this file.
 
 The primary use case is postgraduate entrance exam preparation, initially covering:
 
@@ -624,3 +624,36 @@ Upload material
 Every new feature should be evaluated against this workflow.
 
 Avoid building features merely because they are technically interesting.
+
+---
+
+## 20. Session Rules
+
+This project is developed over many sessions. Progress must be recorded so any later session can continue without relying on memory.
+
+### 20.1 Session Start Rule
+
+Before starting work in a development session:
+
+1. Read `docs/progress.md` to learn the current milestone, unfinished work and recommended next steps.
+2. Read `docs/decisions.md` before changing architecture, so earlier decisions are not re-litigated or silently reversed.
+3. Read the design documents in `docs/` relevant to the task.
+
+### 20.2 Session Ending Rule
+
+Before finishing a development session:
+
+Update:
+
+- `docs/progress.md` (always): milestone status and a new session entry at the top of the session log
+- `docs/decisions.md` if architecture, data model, API contracts, dependencies or product scope changed (add a new decision; mark replaced decisions as superseded instead of deleting them)
+- `CHANGELOG.md` if user-visible features were added, changed or removed
+- the affected design documents in `docs/` if architecture or behavior changed
+
+Summarize in the session entry and in the final reply:
+
+- completed work
+- unfinished work (including failing tests or known issues)
+- next recommended steps
+
+Do not mark a milestone as done unless its acceptance criteria in `docs/08-mvp-roadmap.md` are met and tests pass.
