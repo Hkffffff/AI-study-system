@@ -108,3 +108,9 @@
   - 集成测试使用 Testcontainers（`mysql:8.4`），并设置 `disabledWithoutDocker = true`：没有 Docker 时自动跳过。错误处理和健康检查另有不依赖数据库的 `@WebMvcTest` 测试。
   - 前端使用 npm（不使用 pnpm），全量引入 Element Plus；开发服务器只监听 `127.0.0.1:5173`，`/api` 代理到后端。
 - **影响**：没有 Docker 时，`./mvnw verify` 通过并不代表 Flyway 和数据库连接已经验证过；需要在有 MySQL 的环境里再手动验证一次（见 `progress.md`）。前端打包后的主 chunk 约 1 MB，本地使用可以接受，M7 再考虑按需引入。
+
+## D-014 开发阶段暂不使用 Docker，使用本机 MySQL
+
+- **背景**：开发机没有安装 Docker；用户确认目前不考虑用 Docker 部署。
+- **决策**：日常开发和验收使用本机 MySQL（目前是 9.4），连接信息写在 `.env` 中。`docker-compose.yml` 保留为可选的启动方式，但不作为验收条件。Testcontainers 集成测试保留，没有 Docker 时自动跳过（D-013）。
+- **影响**：数据库相关的行为只能在本机 MySQL 上手动验证，自动化测试覆盖不到 Flyway 迁移。从 M1 开始，每个里程碑在本机 MySQL 上启动一次后端，确认迁移成功。SQL 要同时兼容 MySQL 8.4 和 9.x，不要使用 9.x 独有的特性。

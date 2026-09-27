@@ -19,7 +19,7 @@
 | 里程碑 | 主题 | 状态 | 完成日期 | 备注 |
 |---|---|---|---|---|
 | 设计 | 产品与架构设计文档 | 已完成 | 2026-09-26 | `docs/01`–`08`、`AGENTS.md` |
-| M0 | 项目骨架 | 已完成 | 2026-09-27 | 已在本机 MySQL 上完成端到端验证；`docker compose` 启动方式和 Testcontainers 测试因没有 Docker 未验证（见已知问题 1） |
+| M0 | 项目骨架 | 已完成 | 2026-09-27 | 已在本机 MySQL 上完成端到端验证，用户在浏览器中确认通过；暂不使用 Docker（D-014） |
 | M1 | 学习空间 + Subject | 未开始 | | |
 | M2 | 归档 + 文件上传 | 未开始 | | |
 | M3 | 题目管理 | 未开始 | | |
@@ -32,7 +32,7 @@
 
 | # | 描述 | 发现日期 | 状态 |
 |---|---|---|---|
-| 1 | 本机没有 Docker：Testcontainers 集成测试（`ApplicationIntegrationTest`）被跳过，`docker compose up -d mysql` 也没有实际运行过。Flyway 和数据库连接已于 2026-09-27 在本机 MySQL 上手动验证 | 2026-09-26 | 部分解决 |
+| 1 | 本机没有 Docker：Testcontainers 集成测试（`ApplicationIntegrationTest`）被跳过，`docker compose up -d mysql` 也没有实际运行过。Flyway 和数据库连接已于 2026-09-27 在本机 MySQL 上手动验证 | 2026-09-26 | 暂不处理（D-014：暂不使用 Docker） |
 | 2 | 数据库不可用时后端无法启动（Flyway 在启动时连接数据库），所以健康检查的 `DEGRADED` 只会在运行中途数据库断开时出现 | 2026-09-26 | 接受（符合预期） |
 | 3 | 全量引入 Element Plus，前端主 chunk 约 1 MB（构建时有警告） | 2026-09-26 | 推迟到 M7 |
 | 4 | `.claude/settings.local.json` 已被 Git 跟踪，本地权限配置的变更会出现在 diff 中 | 2026-09-26 | 已解决（用户在 66a4765 中移出版本库，并加入 `.gitignore`） |
@@ -69,13 +69,13 @@
   - 提交 M0：`Complete M0 project initialization`
 - **未完成**：
   - 没有 Docker，`docker compose` 启动 MySQL 和 Testcontainers 测试仍未验证（已知问题 1）
-  - 首页只用 curl 验证了页面和接口，没有在浏览器中查看渲染效果
+  - ~~首页只用 curl 验证过~~：用户已在浏览器中确认布局和系统状态显示正常
   - 本机 MySQL 版本（9.4）与设计（8.4）不一致（已知问题 5）
 - **下一步建议**：
   1. 在浏览器中打开 http://127.0.0.1:5173 ，确认布局和「系统状态」卡片显示正常
   2. 开始 M1：学习空间 + Subject（`V1__workspace.sql`、workspace 模块的 CRUD、前端空间切换器和空间管理页）
   3. 可选：安装 Docker Desktop，补跑集成测试并验证 `docker compose`
-- **相关决策 / 变更**：无新增决策；CHANGELOG 无新变化（M0 条目已在上一次会话中写入）
+- **相关决策 / 变更**：D-014（暂不使用 Docker，使用本机 MySQL）；CHANGELOG 无新变化（M0 条目已在上一次会话中写入）
 
 ### 2026-09-26 · M0 项目骨架
 
