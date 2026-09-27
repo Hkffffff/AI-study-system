@@ -96,3 +96,15 @@
 - **背景**：AI 分析耗时 30–120 秒；规范禁止在 MVP 中引入 Redis 等基础设施。
 - **决策**：分析用有界线程池异步执行，状态存在数据库中，前端轮询；应用启动时把残留的任务标记为失败。对话用 Servlet `SseEmitter` 流式输出，前端用 fetch 解析 SSE。API 错误统一使用 `ProblemDetail`。
 - **影响**：应用重启会中断进行中的分析，用户需要重试。详见 `02` §4。
+
+## D-013 M0 工程基线：自带 Maven Wrapper，健康检查不引入 Actuator
+
+- **背景**：开发机上没有全局安装 Maven，也没有安装 Docker；M0 需要一个能一键构建的骨架。
+- **决策**：
+  - 后端使用 Spring Boot 3.5.x、Java 21（`release 21`，用更高版本的 JDK 编译也可以）。为了兼容 JDK 25，把 Byte Buddy 覆盖为 1.17.x。
+  - 项目自带精简版 Maven Wrapper（`backend/mvnw`、`backend/mvnw.cmd`，固定 Maven 3.9.11），首次运行时自动下载 Maven 到 `~/.m2/wrapper`。
+  - 健康检查使用自己写的 `GET /api/health`（执行 `SELECT 1`），不引入 Actuator，减少暴露在外的端点。
+  - 后端通过 `spring.config.import` 读取仓库根目录的 `.env`，前后端共用同一份配置。
+  - 集成测试使用 Testcontainers（`mysql:8.4`），并设置 `disabledWithoutDocker = true`：没有 Docker 时自动跳过。错误处理和健康检查另有不依赖数据库的 `@WebMvcTest` 测试。
+  - 前端使用 npm（不使用 pnpm），全量引入 Element Plus；开发服务器只监听 `127.0.0.1:5173`，`/api` 代理到后端。
+- **影响**：没有 Docker 时，`./mvnw verify` 通过并不代表 Flyway 和数据库连接已经验证过；需要在有 MySQL 的环境里再手动验证一次（见 `progress.md`）。前端打包后的主 chunk 约 1 MB，本地使用可以接受，M7 再考虑按需引入。

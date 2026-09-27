@@ -1,0 +1,6 @@
+* text=auto
+
+# Shell scripts must keep LF, Windows scripts CRLF
+*.sh text eol=lf
+mvnw text eol=lf
+*.cmd text eol=crlf

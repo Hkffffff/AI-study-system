@@ -1,6 +1,8 @@
 # IDE
 .idea/
 *.iml
+.vscode/*
+!.vscode/extensions.json
 
 # Java
 target/
@@ -9,18 +11,26 @@ target/
 # Node
 node_modules/
 dist/
+coverage/
+*.tsbuildinfo
 
 # Environment
 .env
 .env.*
+!.env.example
 
 # Logs
 *.log
+logs/
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Storage
+# Storage (uploaded originals and derived images)
 storage/*
 !storage/.gitkeep
+data/
+
+# Claude Code local settings
+.claude/

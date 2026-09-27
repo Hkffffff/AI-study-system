@@ -1,0 +1,32 @@
+#!/bin/sh
+# Minimal Maven wrapper: downloads the Maven version pinned in
+# .mvn/wrapper/maven-wrapper.properties into ~/.m2/wrapper and runs it.
+# No global Maven installation is required.
+set -e
+
+BASE_DIR=$(cd "$(dirname "$0")" && pwd)
+PROPS="$BASE_DIR/.mvn/wrapper/maven-wrapper.properties"
+DIST_URL=$(sed -n 's/^distributionUrl=//p' "$PROPS" | tr -d '\r')
+DIST_NAME=$(basename "$DIST_URL" -bin.tar.gz)
+MAVEN_USER_HOME=${MAVEN_USER_HOME:-"$HOME/.m2"}
+DIST_DIR="$MAVEN_USER_HOME/wrapper/dists/$DIST_NAME"
+MVN="$DIST_DIR/$DIST_NAME/bin/mvn"
+
+if [ ! -f "$MVN" ]; then
+  echo "Downloading $DIST_URL" >&2
+  mkdir -p "$DIST_DIR"
+  ARCHIVE="$DIST_DIR/download.tar.gz"
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL -o "$ARCHIVE" "$DIST_URL"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q -O "$ARCHIVE" "$DIST_URL"
+  else
+    echo "mvnw: curl or wget is required" >&2
+    exit 1
+  fi
+  tar -xzf "$ARCHIVE" -C "$DIST_DIR"
+  rm -f "$ARCHIVE"
+fi
+
+export MAVEN_PROJECTBASEDIR="$BASE_DIR"
+exec sh "$MVN" "$@"

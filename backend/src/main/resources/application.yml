@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: ai-study
+  config:
+    # Load KEY=VALUE pairs from .env (project root when started from backend/, or current directory)
+    import:
+      - optional:file:../.env[.properties]
+      - optional:file:.env[.properties]
+  datasource:
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/${DB_NAME:aistudy}?connectionTimeZone=UTC&characterEncoding=UTF-8
+    username: ${DB_USERNAME:aistudy}
+    password: ${DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    locations: classpath:db/migration
+  jackson:
+    time-zone: UTC
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  # No login in the MVP: never listen on anything but localhost (AGENTS.md §12)
+  address: 127.0.0.1
+  port: ${APP_SERVER_PORT:8080}
+  error:
+    include-stacktrace: never
+    include-message: never
+
+app:
+  storage:
+    local-root: ${APP_STORAGE_LOCAL_ROOT:./data/storage}
